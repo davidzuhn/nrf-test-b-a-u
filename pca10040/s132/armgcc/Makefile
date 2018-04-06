@@ -2,8 +2,10 @@ PROJECT_NAME     := ble_app_uart_pca10040_s132
 TARGETS          := nrf52832_xxaa
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := ../../../../../..
+SDK_ROOT := /Users/zoo/Programming/nordic/SDK/nRF5_SDK_15.0.0_a53641a
 PROJ_DIR := ../../..
+
+NRFJPROG = nrfjprog --snr 682362598
 
 $(OUTPUT_DIRECTORY)/nrf52832_xxaa.out: \
   LINKER_SCRIPT  := ble_app_uart_gcc_nrf52.ld
@@ -297,17 +299,17 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 # Flash the program
 flash: $(OUTPUT_DIRECTORY)/nrf52832_xxaa.hex
 	@echo Flashing: $<
-	nrfjprog -f nrf52 --program $< --sectorerase
-	nrfjprog -f nrf52 --reset
+	$(NRFJPROG) -f nrf52 --program $< --sectorerase
+	$(NRFJPROG) -f nrf52 --reset
 
 # Flash softdevice
 flash_softdevice:
 	@echo Flashing: s132_nrf52_6.0.0_softdevice.hex
-	nrfjprog -f nrf52 --program $(SDK_ROOT)/components/softdevice/s132/hex/s132_nrf52_6.0.0_softdevice.hex --sectorerase
-	nrfjprog -f nrf52 --reset
+	$(NRFJPROG) -f nrf52 --program $(SDK_ROOT)/components/softdevice/s132/hex/s132_nrf52_6.0.0_softdevice.hex --sectorerase
+	$(NRFJPROG) -f nrf52 --reset
 
 erase:
-	nrfjprog -f nrf52 --eraseall
+	$(NRFJPROG) -f nrf52 --eraseall
 
 SDK_CONFIG_FILE := ../config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar
